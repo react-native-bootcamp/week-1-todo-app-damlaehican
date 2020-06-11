@@ -8,10 +8,8 @@ const Item = (props: any) => {
     let styles = props.data.status ? selected : unSelected
     return (
         <TouchableOpacity onPress={props.onPress} style={{ flexDirection: 'row-reverse', }}>
-            
             <View style={styles.container}>
                 <Text style={styles.textStyle} >{props.data.issue}</Text>
-
             </View>
         </TouchableOpacity >
     )
