@@ -12,7 +12,7 @@ const Item = (props: any) => {
                 <Text style={styles.textStyle} >{props.data.issue}</Text>
             </View>
         </TouchableOpacity >
-    )
+    )jlddşddş
 }
 
 const selected = StyleSheet.create({
