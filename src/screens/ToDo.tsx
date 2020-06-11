@@ -1,65 +1,104 @@
-import React, { Component, useState } from 'react'
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, FlatList, SafeAreaView, Dimensions, TextInput } from 'react-native'
-import Item from '../components/Item'
-const dummy = [
-    {
-        id: 1,
-        issue: 'Alışveriş yapılacak',
-        status: true
-    },
-    {
-        id: 2,
-        issue: 'React Native çalışılacak',
-        status: true
-    },
-    {
-        id: 3,
-        issue: 'Hooks yapısı incelenecek',
-        status: false
-    }
+import React, { useState } from 'react';
+import {
+    View,
+    TextInput,
+    Dimensions,
+    TouchableOpacity,
+    FlatList,
+    Text,
+    ImageBackground,
+    Image
+} from 'react-native';
+import Item from '../components/Item';
+import { EvilIcons } from '@expo/vector-icons';
 
-]
-type Issue = typeof dummy[0]
+const ToDo = () => {
 
+    const [entry, setEntry] = useState('');
+    const [data, setData] = useState<any>([
+    ])
 
-const ToDo = (props: any) => {
-
-    const [data, setData] = useState<Issue[]>(dummy)
-    const [width, height] = useState(Dimensions.get('window'))
     const changeStatus = (id: number) => {
         setData(data.map(issue => issue.id === id ? { ...issue, status: !issue.status } : issue))
-        console.warn(id)
     }
+    const changeText = (text: string) => {
+        setEntry(text);
+    };
+    const addList = () => {
+        const newListObj = {
+            id: Math.floor(Math.random() * 10000),
+            issue: entry,
+            status: false
+        }
+        setData([...data, newListObj])
+        setEntry('')
+        console.warn(newListObj.status)
+    };
+
     return (
-        <SafeAreaView>
+        <ImageBackground source={require('../../assets/background.png')} style={{
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height / 1.7, top: -100
+        }}>
+            <Image source={require('../../assets/light-1.png')} style={{ width: 100, height: 200 }}></Image>
             <View style={{
-                justifyContent: 'center',
                 alignItems: 'center',
-                flexDirection: 'column',
-                margin: 20,
-                borderRadius: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+
+                elevation: 5,
             }}>
-                <View style={{flexDirection: 'row'}}></View>
-                <View style={{
-                    borderRadius: 10, backgroundColor: '#e0e0e0', width: width.width / 1.2,
-                    height: width.width / 10, justifyContent: 'center'
-                }}>
-                    <TextInput style={{ fontWeight: 'bold', marginHorizontal: 20 }} placeholder='Yapılacak bir şeyler ekle'></TextInput>
-
+                <View style={{ flexDirection: 'row', margin: 40, }}>
+                    <View style={{
+                        backgroundColor: '#eeeeee',
+                        width: Dimensions.get('window').width / 1.9,
+                        height: Dimensions.get('window').height / 20,
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        borderTopLeftRadius: 10,
+                        borderBottomLeftRadius: 10
+                    }}>
+                        <View style={{ alignItems: 'flex-start' }}>
+                            <EvilIcons name="search" size={24} color="black" />
+                        </View>
+                        <TextInput onSubmitEditing={addList} returnKeyType='search' onChangeText={changeText}
+                            placeholder={'Enter a job to be done.'}
+                            value={entry}
+                            style={{ textAlign: 'left', fontSize: 18, margin: 8, opacity: 1 }} ></TextInput>
+                    </View>
+                    <View style={{
+                        backgroundColor: '#EF6C00',
+                        width: Dimensions.get('window').width / 4,
+                        height: Dimensions.get('window').height / 20,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderTopRightRadius: 10,
+                        borderBottomRightRadius: 10,
+                    }}>
+                        <TouchableOpacity onPress={addList}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>SAVE</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View>
-                    <TouchableOpacity style={{ backgroundColor: 'reed' }}>
-                        <Text>Ekle</Text>
-                    </TouchableOpacity>
+                <View style={{ marginTop: 75, justifyContent: 'center' }}>
+                    <FlatList data={data} renderItem={({ item }) =>
+                        <Item data={item} onPress={() => changeStatus(item.id)} >
+                            <View>
+                            </View>
+                        </Item>
+                    }></FlatList>
                 </View>
-
-                <FlatList
-                    keyExtractor={(item, index) => index.toString()}
-                    data={data}
-                    renderItem={({ item }) => <Item data={item} press={() => changeStatus(item.id)}></Item>}
-                />
             </View>
-        </SafeAreaView>
+        </ImageBackground>
+
     )
 }
+
+
 export default ToDo
